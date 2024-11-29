@@ -1,7 +1,1 @@
-rootProject.name = "Advent of Code Kotlin Template"
-
-dependencyResolutionManagement {
-    repositories {
-        mavenCentral()
-    }
-}
+rootProject.name = "aoc-2025"
