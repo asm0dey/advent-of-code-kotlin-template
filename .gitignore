@@ -1,4 +1,5 @@
 .gradle
+**/*.txt
 .idea
 .kotlin/
 build
