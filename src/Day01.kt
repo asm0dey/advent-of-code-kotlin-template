@@ -4,7 +4,7 @@ import kotlin.io.path.Path
 import kotlin.io.path.readText
 import kotlin.math.abs
 
-fun main() {
+fun main(args:Array<String>) {
     fun parseDay1(input: List<String>): List<Pair<Int, Int>> {
         val pairs = input
             .map { it.split(" ").filter { it.isNotBlank() } }
@@ -33,13 +33,19 @@ fun main() {
 //    check(part1(listOf("test_input")) == 1)
 
     // Or read a large test input from the `src/Day01_test.txt` file:
-    val testInput = readInput("Day01_test")
-    check(part1(testInput) == 11)
+    if(args.isEmpty()){
+        val testInput = readInput("Day01_test")
+        check(part1(testInput) == 11)
 
-    // Read the input from the `src/Day01.txt` file.
-    val input = readInput("Day01")
-    part1(input).println()
-    part2(input).println()
+        // Read the input from the `src/Day01.txt` file.
+        val input = readInput("Day01")
+        part1(input).println()
+        part2(input).println()
+    } else {
+        val input = Path(args[0]).readText().trim().lines()
+        part1(input).println()
+        part2(input).println()
+    }
 }
 
 /**
