@@ -61,21 +61,4 @@ public class Day01 {
     public static List<String> readInput(String name) throws IOException {
         return Files.readAllLines(Paths.get("src/" + name + ".txt"));
     }
-
-    public static String md5(String input) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] messageDigest = md.digest(input.getBytes());
-            BigInteger no = new BigInteger(1, messageDigest);
-            StringBuilder hashtext = new StringBuilder(no.toString(16));
-
-            // Now we need to zero pad it to 32 characters
-            while (hashtext.length() < 32) {
-                hashtext.insert(0, "0");
-            }
-            return hashtext.toString();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
