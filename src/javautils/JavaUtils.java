@@ -1,10 +1,9 @@
 package javautils;
 
-import org.jetbrains.annotations.NotNull;
-
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -20,22 +19,37 @@ public class JavaUtils {
         }
     }
 
-    public record JGrid<T>(T[][] data) implements Iterable<JPoint2D> {
-        @SuppressWarnings("unchecked")
-        public JGrid(List<List<T>> data) {
-            this(data.stream().map(list -> list.toArray((T[]) new Object[0])).toArray(size -> (T[][]) new Object[size][]));
+    public record JGrid<T>(Map<JPoint2D, T> data) implements Iterable<JPoint2D> {
+
+        public JGrid(List<List<T>> dataList) {
+            this(dataListToMap(dataList));
+        }
+
+        private static <T> Map<JPoint2D, T> dataListToMap(List<List<T>> dataList) {
+            Map<JPoint2D, T> mapData = new HashMap<>();
+            for (int y = 0; y < dataList.size(); y++) {
+                List<T> row = dataList.get(y);
+                for (int x = 0; x < row.size(); x++) {
+                    mapData.put(new JPoint2D(x, y), row.get(x));
+                }
+            }
+            return mapData;
         }
 
         public T get(int x, int y) {
-            return data[y][x];
+            return data.get(new JPoint2D(x, y));
+        }
+
+        public void set(JPoint2D point, T value) {
+            data.put(point, value);
         }
 
         public T get(JPoint2D point) {
-            return data[point.y][point.x];
+            return data.get(point);
         }
 
         public boolean contains(JPoint2D point) {
-            return point.x() >= 0 && point.x() < data[0].length && point.y() >= 0 && point.y() < data.length;
+            return data.containsKey(point);
         }
 
         public Stream<T> beam(JPoint2D source, JPoint2D direction, int amount) {
@@ -46,30 +60,21 @@ public class JavaUtils {
                 .map(this::get);
         }
 
-        @NotNull
         @Override
         public Iterator<JPoint2D> iterator() {
-            return new java.util.Iterator<>() {
-                int rowIndex = 0;
-                int colIndex = 0;
+            return data.keySet().iterator();
+        }
 
-                @Override
-                public boolean hasNext() {
-                    return rowIndex < data.length && colIndex < data[rowIndex].length;
+        public void print() {
+            int maxY = data.keySet().stream().mapToInt(JPoint2D::y).max().orElse(0);
+            int maxX = data.keySet().stream().mapToInt(JPoint2D::x).max().orElse(0);
+            for (int y = 0; y <= maxY; y++) {
+                for (int x = 0; x <= maxX; x++) {
+                    System.out.print(get(x, y) + " ");
                 }
-
-                @Override
-                public JPoint2D next() {
-                    if (!hasNext()) throw new NoSuchElementException();
-                    var point = new JPoint2D(colIndex, rowIndex);
-                    colIndex++;
-                    if (colIndex >= data[rowIndex].length) {
-                        colIndex = 0;
-                        rowIndex++;
-                    }
-                    return point;
-                }
-            };
+                System.out.println();
+            }
+            System.out.println();
         }
     }
 

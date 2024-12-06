@@ -27,6 +27,7 @@ fun main(args: Array<String>) {
                             .map(point::plus)
                             .filter(grid::contains)
                             .map(grid::get)
+                            .filterNotNull()
                             .sorted()
                             .joinToString("")
                     }
