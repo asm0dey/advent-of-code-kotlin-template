@@ -3,6 +3,7 @@
 data class Point2D(val x: Int, val y: Int) {
     operator fun plus(other: Point2D) = Point2D(x + other.x, y + other.y)
     operator fun times(other: Int) = Point2D(x * other, y * other)
+    operator fun minus(point2D: Point2D): Point2D = Point2D(x - point2D.x, y - point2D.y)
 }
 
 fun p(x: Int, y: Int) = Point2D(x, y)
