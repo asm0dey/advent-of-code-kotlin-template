@@ -8,17 +8,6 @@ fun main(args: Array<String>) {
         var curSize: Int = initSize,
     )
 
-    fun List<IndexedValue<BlockInfo>>.compact(): MutableList<IndexedValue<BlockInfo>> {
-        val lst = arrayListOf<IndexedValue<BlockInfo>>()
-        for (iv in this) {
-            if (iv.value.curSize == 0) continue
-            val newValue = iv.value
-            if (lst.isEmpty() || lst.last().value.isFile || newValue.isFile) lst.add(iv)
-            else lst.last().value.curSize += newValue.curSize
-        }
-        return lst
-    }
-
     fun part1(input: String): Long {
         val fileStructure = input.map { it.digitToInt() }
             .mapIndexed { index, i -> BlockInfo(index / 2, index % 2 == 0, i) }
@@ -61,7 +50,6 @@ fun main(args: Array<String>) {
                 realLeftIndex,
                 IndexedValue(realLeftIndex, value.copy(isFile = true))
             )
-            indexedFileStructure = indexedFileStructure.compact()
         }
         var sum = 0L
         var pointer = 0L

@@ -39,18 +39,6 @@ public class Day09 {
   private record IndexedBlockInfo(int index, BlockInfo value) {
   }
 
-  private static List<IndexedBlockInfo> compact(List<IndexedBlockInfo> input) {
-    return input.stream()
-        .filter(iv -> iv.value.curSize != 0)
-        .gather(fold(() -> new ArrayList<IndexedBlockInfo>(), (lst, iv) -> {
-          if (lst.isEmpty() || lst.getLast().value.isFile || iv.value.isFile) lst.add(iv);
-          else lst.getLast().value.curSize += iv.value.curSize;
-          return lst;
-        }))
-        .findFirst()
-        .orElseThrow();
-  }
-
   private static long part1(String input) {
     List<BlockInfo> fileStructure = parseToFileStructure(input);
 
@@ -125,7 +113,6 @@ public class Day09 {
       newEntry.value.isFile = true;
 
       indexedFileStructure.add(realLeftIndex, newEntry);
-      indexedFileStructure = compact(indexedFileStructure);
     }
 
     long sum = 0L;
