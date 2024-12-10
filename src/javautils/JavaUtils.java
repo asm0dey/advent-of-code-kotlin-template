@@ -101,4 +101,5 @@ public class JavaUtils {
   public static final JPoint2D DOWN_RIGHT = new JPoint2D(1, 1);
   public static final JPoint2D DOWN_LEFT = new JPoint2D(-1, 1);
   public static final List<JPoint2D> directions = List.of(UP, DOWN, LEFT, RIGHT, UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT);
+  public static final List<JPoint2D> mainDirections = List.of(UP, DOWN, LEFT, RIGHT);
 }
