@@ -16,6 +16,7 @@ val UP_LEFT = p(-1, -1)
 val DOWN_RIGHT = p(1, 1)
 val DOWN_LEFT = p(-1, 1)
 val mainDirections = listOf(UP, DOWN, LEFT, RIGHT)
+val diagonalsDirections = listOf(UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT)
 val directions = listOf(UP, DOWN, LEFT, RIGHT, UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT)
 
 
