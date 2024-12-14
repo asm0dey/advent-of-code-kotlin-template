@@ -1,5 +1,8 @@
 @file:Suppress("unused")
 
+import java.util.*
+
+
 data class Point2D(val x: Int, val y: Int) {
     operator fun plus(other: Point2D) = Point2D(x + other.x, y + other.y)
     operator fun times(other: Int) = Point2D(x * other, y * other)
@@ -81,8 +84,101 @@ fun <T> Grid<T>.print() {
         for (x in minX..maxX) {
             print(data[Point2D(x, y)] ?: " ")
         }
-        println()
+        println("")
     }
 }
 
 fun List<String>.toGrid() = Grid(map { it.toCharArray().toList() })
+@JvmInline
+value class StringTemplate(private val template: String) {
+    fun parse(input: String): List<Map<String, Any?>> {
+
+        val map = template.split("\\{\\w+\\|\\w+\\??}".toRegex()).map { Regex.escape(it) }
+        val findAll = Regex("\\{\\w+\\|\\w+\\??}").findAll(template).toList()
+        val lines = buildString {
+            map.mapIndexed { index, s ->
+                append(s)
+                if (index < findAll.size) {
+                    append(findAll[index].value)
+                }
+            }
+        }.lines()
+        val templatePattern = lines
+            .joinToString("\n") { line ->
+                line.replace("\\{([^|}]+)\\|([^}]+)(\\??)}".toRegex()) { match ->
+                    val key = match.groupValues[1] // key inside the placeholder
+                    val isOptional = match.groupValues[3] == "?" // Check if the value is optional
+                    if (isOptional) "(?<$key>[^,\\s]*)?" else "(?<$key>[^,\\s]+)" // Optional group or mandatory group
+                }
+            }
+            .toRegex()
+
+        return templatePattern.findAll(input).map { matchResult ->
+            val tempResult = mutableMapOf<String, Any?>()
+
+            // Extract all named groups from the match
+            "(?<=\\(\\?<)([a-zA-Z][a-zA-Z0-9]*)".toRegex().findAll(templatePattern.pattern).forEach { match ->
+                val groupName = match.value
+                val rawValue = matchResult.groups[groupName]?.value
+                val isOptional = template.contains("{$groupName|") && template.contains("\\{$groupName\\|.*?\\?}".toRegex())
+                if (rawValue != null) {
+                    // Identify the type from the template and convert the raw value
+                    val type = template.substringAfter("{$groupName|")
+                        .substringBefore("}")
+                        .trim()
+                    tempResult[groupName] = rawValue.trim().convertToType(type)
+                } else if (!isOptional) {
+                    throw IllegalArgumentException("Mandatory value for '$groupName' is missing in the input")
+                }
+            }
+
+            tempResult.toMap()
+        }
+            .toList()
+
+    }
+
+}
+
+fun String.convertToType(type: String): Any? {
+    // Handle nullable types by removing the '?' suffix
+    val isNullable = type.endsWith("?")
+    val actualType = if (isNullable) type.removeSuffix("?") else type
+
+    return try {
+        when (actualType.lowercase(Locale.getDefault())) {
+            "int" -> toInt()
+            "long" -> toLong()
+            "double" -> toDouble()
+            "string" -> this
+            else -> throw IllegalArgumentException("Unsupported type: $actualType")
+        }
+    } catch (e: Exception) {
+        if (isNullable) null else throw e // Return null for nullable types if conversion fails, else propagate the exception
+    }
+}
+
+// Example usage
+fun main() {
+    val input = """
+        Button A: X+94.5, Y+34
+        Button B: X+22, Y+67
+        Prize: X=Reward, Y=ContactUs
+        
+        Button A: X+100, Y+200
+        Button B: X+23.7, Y+45
+        Prize: X=12345.67, Y=SomePrizeHere
+    """.trimIndent()
+
+    val template = """
+        Button A: X+{ax|double}, Y+{ay|long}
+        Button B: X+{bx|double}, Y+{by|long}
+        Prize: X={rx|string}, Y={ry|string}
+    """.trimIndent().toTemplate()
+
+    val result = template.parse(input)
+
+    println(result)
+}
+
+private fun String.toTemplate() = StringTemplate(this)

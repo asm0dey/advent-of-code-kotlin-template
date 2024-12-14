@@ -81,10 +81,13 @@ public class JavaUtils {
 
     public void print() {
       int maxY = data.keySet().stream().mapToInt(JPoint2D::y).max().orElse(0);
+      int minY = data.keySet().stream().mapToInt(JPoint2D::y).min().orElse(0);
       int maxX = data.keySet().stream().mapToInt(JPoint2D::x).max().orElse(0);
-      for (int y = 0; y <= maxY; y++) {
-        for (int x = 0; x <= maxX; x++) {
-          System.out.print(get(x, y) + " ");
+      int minX = data.keySet().stream().mapToInt(JPoint2D::x).min().orElse(0);
+      for (int y = minY; y <= maxY; y++) {
+        for (int x = minX; x <= maxX; x++) {
+          T obj = get(x, y);
+          System.out.print(obj == null ? " " : obj);
         }
         System.out.println();
       }
