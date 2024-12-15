@@ -55,7 +55,7 @@ fun main(args: Array<String>) {
             }
             if (containsVertical) {
                 println("Second $counter:")
-                grid.print()
+                grid.print(" ")
                 return counter
             }
             counter++

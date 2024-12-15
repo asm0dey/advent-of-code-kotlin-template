@@ -75,20 +75,21 @@ fun <T> Grid<T>.flipY(): Grid<T> {
     return Grid(flippedData)
 }
 
-fun <T> Grid<T>.print() {
+fun <T> Grid<T>.print(emptyPlaceholder: String = " ") {
     val maxY = data.keys.maxOfOrNull { it.y } ?: return
     val maxX = data.keys.maxOfOrNull { it.x } ?: return
     val minX = data.keys.minOfOrNull { it.x } ?: return
     val minY = data.keys.minOfOrNull { it.y } ?: return
     for (y in minY..maxY) {
         for (x in minX..maxX) {
-            print(data[Point2D(x, y)] ?: " ")
+            print(data[Point2D(x, y)] ?: emptyPlaceholder)
         }
         println("")
     }
 }
 
 fun List<String>.toGrid() = Grid(map { it.toCharArray().toList() })
+
 @JvmInline
 value class StringTemplate(private val template: String) {
     fun parse(input: String): List<Map<String, Any?>> {
@@ -120,7 +121,8 @@ value class StringTemplate(private val template: String) {
             "(?<=\\(\\?<)([a-zA-Z][a-zA-Z0-9]*)".toRegex().findAll(templatePattern.pattern).forEach { match ->
                 val groupName = match.value
                 val rawValue = matchResult.groups[groupName]?.value
-                val isOptional = template.contains("{$groupName|") && template.contains("\\{$groupName\\|.*?\\?}".toRegex())
+                val isOptional =
+                    template.contains("{$groupName|") && template.contains("\\{$groupName\\|.*?\\?}".toRegex())
                 if (rawValue != null) {
                     // Identify the type from the template and convert the raw value
                     val type = template.substringAfter("{$groupName|")
