@@ -122,7 +122,7 @@ fun main() {
         return score(objects)
     }
 
-    val input = File("/home/finkel/work_self/aoc-2025/src/15.txt").readText()
+    val input = File("src/15.txt").readText()
     val (grid, moves) = init(input)
 
     println("p1: ${runSimulation(grid, moves)}")

@@ -18,9 +18,14 @@ public class JavaUtils {
       return new JPoint2D(x * other, y * other);
     }
 
+    public JPoint2D copy() {
+      return new JPoint2D(x, y);
+    }
+
     public JPoint2D minus(JPoint2D other) {
       return new JPoint2D(x - other.x, y - other.y);
     }
+    
   }
 
   public record JGrid<T>(Map<JPoint2D, T> data) implements Iterable<JPoint2D> {
