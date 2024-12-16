@@ -38,11 +38,12 @@ fun main(args: Array<String>) {
                         if (it.y < 0) maxY + it.y else it.y
                     ) to vel
                 }
-            var grid = Grid(robots.associate { it.first to '*' })
+            var grid = Grid(robots.associate { it.first to '*' }.toMutableMap())
             val grid2 =
                 Grid(grid
                     .filter { (it.first + LEFT in grid || it.first + RIGHT in grid) && (it.first + UP in grid || it.first + DOWN in grid) }
-                    .associate { it.first to '*' })
+                    .associate { it.first to '*' }
+                    .toMutableMap())
             val minY = grid2.data.keys.minOfOrNull { it.y }
             val minX = grid2.data.keys.minOfOrNull { it.x }
             val maxX = grid2.data.keys.maxOfOrNull { it.x }

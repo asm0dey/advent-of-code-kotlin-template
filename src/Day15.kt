@@ -82,22 +82,17 @@ fun main() {
     fun Map<Point2D, Char>.createObjectsAndAddToMap(
         width: Int,
         expandedMap: MutableMap<Point2D, Char>,
-    ): List<GameObject> {
-        val resultingObjects =
-            filter { (_, value) -> value != '#' && value != '.' }
-                .map { (point, value) ->
-                    GameObject(
-                        pos = Point2D(point.x * width, point.y),
-                        type = if (value == '@') ObjectType.ROBOT else ObjectType.BOX,
-                        size = if (value == '@') Point2D(1, 1) else Point2D(width, 1)
-                    ).also {
-                        expandedMap[Point2D(point.x * width, point.y)] = '.'
-                    }
-                }
-                .toList()
-
-        return resultingObjects
-    }
+    ): List<GameObject> = filter { (_, value) -> value != '#' && value != '.' }
+        .map { (point, value) ->
+            GameObject(
+                pos = Point2D(point.x * width, point.y),
+                type = if (value == '@') ObjectType.ROBOT else ObjectType.BOX,
+                size = if (value == '@') Point2D(1, 1) else Point2D(width, 1)
+            ).also {
+                expandedMap[Point2D(point.x * width, point.y)] = '.'
+            }
+        }
+        .toList()
 
     fun runSimulation(
         origGrid: Grid<Char>,
@@ -109,7 +104,7 @@ fun main() {
         val expandedMap = HashMap(fillWalls(gridData, width))
 
         val objects = gridData.createObjectsAndAddToMap(width, expandedMap).toMutableList()
-        val grid = Grid(expandedMap.toMap())
+        val grid = Grid(expandedMap.toMap().toMutableMap())
 
         for (direction in moves.map { directionMap[it] }) {
             val snapshot = objects.map { it.copy() }

@@ -3,10 +3,11 @@
 import java.util.*
 
 
-data class Point2D(val x: Int, val y: Int) {
+data class Point2D(val x: Int, val y: Int) : Comparable<Point2D> {
     operator fun plus(other: Point2D) = Point2D(x + other.x, y + other.y)
     operator fun times(other: Int) = Point2D(x * other, y * other)
     operator fun minus(point2D: Point2D): Point2D = Point2D(x - point2D.x, y - point2D.y)
+    override fun compareTo(other: Point2D): Int = if (x == other.x) y.compareTo(other.y) else x.compareTo(other.x)
 }
 
 fun p(x: Int, y: Int) = Point2D(x, y)
@@ -23,7 +24,8 @@ val diagonalsDirections = listOf(UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT)
 val directions = listOf(UP, DOWN, LEFT, RIGHT, UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT)
 
 
-data class Grid<T>(val data: Map<Point2D, T>, val generator: (Point2D) -> T? = { null }) : Iterable<Pair<Point2D, T>> {
+data class Grid<T>(val data: MutableMap<Point2D, T>, val generator: (Point2D) -> T? = { null }) :
+    Iterable<Pair<Point2D, T>> {
     constructor(lst: List<List<T>>) : this(
         lst
             .flatMapIndexed { y, row ->
@@ -32,6 +34,7 @@ data class Grid<T>(val data: Map<Point2D, T>, val generator: (Point2D) -> T? = {
                 }
             }
             .toMap()
+            .toMutableMap()
     )
 
     operator fun get(x: Int, y: Int) = data[Point2D(x, y)]
@@ -41,6 +44,9 @@ data class Grid<T>(val data: Map<Point2D, T>, val generator: (Point2D) -> T? = {
         (1..amount).asSequence().map { source + direction * it }.filter(::contains).map { get(it)!! }
 
     override fun iterator(): Iterator<Pair<Point2D, T>> = data.entries.map { (a, b) -> a to b }.iterator()
+    operator fun set(first: Point2D, value: T) {
+        data[first] = value
+    }
 }
 
 fun <T> Grid<T>.rotateCW(): Grid<T> {
@@ -48,7 +54,7 @@ fun <T> Grid<T>.rotateCW(): Grid<T> {
     val rotatedData = data.mapKeys { (point) ->
         Point2D(maxY - point.y, point.x)
     }
-    return Grid(rotatedData)
+    return Grid(rotatedData.toMutableMap())
 }
 
 fun <T> Grid<T>.rotateCCW(): Grid<T> {
@@ -56,7 +62,7 @@ fun <T> Grid<T>.rotateCCW(): Grid<T> {
     val rotatedData = data.mapKeys { (point) ->
         Point2D(point.y, maxX - point.x)
     }
-    return Grid(rotatedData)
+    return Grid(rotatedData.toMutableMap())
 }
 
 fun <T> Grid<T>.flipX(): Grid<T> {
@@ -64,7 +70,7 @@ fun <T> Grid<T>.flipX(): Grid<T> {
     val flippedData = data.mapKeys { (point) ->
         Point2D(maxX - point.x, point.y)
     }
-    return Grid(flippedData)
+    return Grid(flippedData.toMutableMap())
 }
 
 fun <T> Grid<T>.flipY(): Grid<T> {
@@ -72,7 +78,7 @@ fun <T> Grid<T>.flipY(): Grid<T> {
     val flippedData = data.mapKeys { (point) ->
         Point2D(point.x, maxY - point.y)
     }
-    return Grid(flippedData)
+    return Grid(flippedData.toMutableMap())
 }
 
 fun <T> Grid<T>.print(emptyPlaceholder: String = " ") {
@@ -87,6 +93,7 @@ fun <T> Grid<T>.print(emptyPlaceholder: String = " ") {
         println("")
     }
 }
+
 
 fun List<String>.toGrid() = Grid(map { it.toCharArray().toList() })
 
