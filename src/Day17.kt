@@ -85,9 +85,8 @@ sealed interface OpcodeD17 {
     data object Adv : OpcodeD17 {
         override fun invoke(registers: LongArray, operand: Int): Long {
             val numerator = registers[0]
-
-//            val denominator = 2.0.pow(operand.combo(registers).toInt()).toLong()
-            registers[0] = numerator shr operand.combo(registers).toInt()
+            val denominator = 2.0.pow(operand.combo(registers).toInt()).toLong()
+            registers[0] = numerator/denominator
             registers[3] += 2L
             return -1
         }

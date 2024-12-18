@@ -15,6 +15,7 @@
  */
 
 @file:JvmName("Komprehensions")
+@file:Suppress("unused")
 
 
 /**
@@ -26,10 +27,7 @@ fun <A, R> doLet(
     zero: () -> A,
     one: (A) -> R,
 ): R =
-    zero()
-        .let { a ->
-            one(a)
-        }
+    one(zero())
 
 /**
  * Composes a sequence from multiple creation functions chained by let.
@@ -43,10 +41,7 @@ fun <A, B, R> doLet(
 ): R =
     zero()
         .let { a ->
-            one(a)
-                .let { b ->
-                    two(a, b)
-                }
+            two(a, one(a))
         }
 
 /**
@@ -64,10 +59,7 @@ fun <A, B, C, R> doLet(
         .let { a ->
             one(a)
                 .let { b ->
-                    two(a, b)
-                        .let { c ->
-                            three(a, b, c)
-                        }
+                    three(a, b, two(a, b))
                 }
         }
 
@@ -89,10 +81,7 @@ fun <A, B, C, D, R> doLet(
                 .let { b ->
                     two(a, b)
                         .let { c ->
-                            three(a, b, c)
-                                .let { d ->
-                                    four(a, b, c, d)
-                                }
+                            four(a, b, c, three(a, b, c))
                         }
                 }
         }
@@ -118,10 +107,7 @@ fun <A, B, C, D, E, R> doLet(
                         .let { c ->
                             three(a, b, c)
                                 .let { d ->
-                                    four(a, b, c, d)
-                                        .let { e ->
-                                            five(a, b, c, d, e)
-                                        }
+                                    five(a, b, c, d, four(a, b, c, d))
                                 }
                         }
                 }
@@ -151,10 +137,7 @@ fun <A, B, C, D, E, F, R> doLet(
                                 .let { d ->
                                     four(a, b, c, d)
                                         .let { e ->
-                                            five(a, b, c, d, e)
-                                                .let { f ->
-                                                    six(a, b, c, d, e, f)
-                                                }
+                                            six(a, b, c, d, e, five(a, b, c, d, e))
                                         }
                                 }
                         }
@@ -188,10 +171,7 @@ fun <A, B, C, D, E, F, G, R> doLet(
                                         .let { e ->
                                             five(a, b, c, d, e)
                                                 .let { f ->
-                                                    six(a, b, c, d, e, f)
-                                                        .let { g ->
-                                                            seven(a, b, c, d, e, f, g)
-                                                        }
+                                                    seven(a, b, c, d, e, f, six(a, b, c, d, e, f))
                                                 }
                                         }
                                 }
@@ -229,10 +209,7 @@ fun <A, B, C, D, E, F, G, H, R> doLet(
                                                 .let { f ->
                                                     six(a, b, c, d, e, f)
                                                         .let { g ->
-                                                            seven(a, b, c, d, e, f, g)
-                                                                .let { h ->
-                                                                    eight(a, b, c, d, e, f, g, h)
-                                                                }
+                                                            eight(a, b, c, d, e, f, g, seven(a, b, c, d, e, f, g))
                                                         }
                                                 }
                                         }
@@ -274,10 +251,9 @@ fun <A, B, C, D, E, F, G, H, I, R> doLet(
                                                         .let { g ->
                                                             seven(a, b, c, d, e, f, g)
                                                                 .let { h ->
-                                                                    eight(a, b, c, d, e, f, g, h)
-                                                                        .let { i ->
-                                                                            nine(a, b, c, d, e, f, g, h, i)
-                                                                        }
+                                                                    nine(a, b, c, d, e, f, g, h,
+                                                                        eight(a, b, c, d, e, f, g, h)
+                                                                    )
                                                                 }
                                                         }
                                                 }
@@ -288,7 +264,7 @@ fun <A, B, C, D, E, F, G, H, I, R> doLet(
         }
 
 /**
- * Composes an sequence from multiple creation functions chained by andThen.
+ * Composes a sequence from multiple creation functions chained by andThen.
  *
  * @return chain
  */
@@ -302,7 +278,7 @@ fun <A : Chainable, R : Chainable> doChainable(
         }
 
 /**
- * Composes an sequence from multiple creation functions chained by andThen.
+ * Composes a sequence from multiple creation functions chained by andThen.
  *
  * @return chain
  */
@@ -320,7 +296,7 @@ fun <A : Chainable, B : Chainable, R : Chainable> doChainable(
         }
 
 /**
- * Composes an sequence from multiple creation functions chained by andThen.
+ * Composes a sequence from multiple creation functions chained by andThen.
  *
  * @return chain
  */
@@ -342,7 +318,7 @@ fun <A : Chainable, B : Chainable, C : Chainable, R : Chainable> doChainable(
         }
 
 /**
- * Composes an sequence from multiple creation functions chained by andThen.
+ * Composes a sequence from multiple creation functions chained by andThen.
  *
  * @return chain
  */
@@ -364,7 +340,7 @@ fun <A : Chainable, B : Chainable, C : Chainable, D : Chainable, R : Chainable> 
     }
 
 /**
- * Composes an sequence from multiple creation functions chained by andThen.
+ * Composes a sequence from multiple creation functions chained by andThen.
  *
  * @return chain
  */
@@ -394,7 +370,7 @@ fun <A : Chainable, B : Chainable, C : Chainable, D : Chainable, E : Chainable, 
         }
 
 /**
- * Composes an sequence from multiple creation functions chained by andThen.
+ * Composes a sequence from multiple creation functions chained by andThen.
  *
  * @return chain
  */
@@ -428,7 +404,7 @@ fun <A : Chainable, B : Chainable, C : Chainable, D : Chainable, E : Chainable, 
         }
 
 /**
- * Composes an sequence from multiple creation functions chained by andThen.
+ * Composes a sequence from multiple creation functions chained by andThen.
  *
  * @return chain
  */
@@ -466,7 +442,7 @@ fun <A : Chainable, B : Chainable, C : Chainable, D : Chainable, E : Chainable, 
         }
 
 /**
- * Composes an sequence from multiple creation functions chained by andThen.
+ * Composes a sequence from multiple creation functions chained by andThen.
  *
  * @return chain
  */
@@ -508,7 +484,7 @@ fun <A : Chainable, B : Chainable, C : Chainable, D : Chainable, E : Chainable, 
         }
 
 /**
- * Composes an sequence from multiple creation functions chained by andThen.
+ * Composes a sequence from multiple creation functions chained by andThen.
  *
  * @return chain
  */
@@ -894,11 +870,13 @@ fun <A, B, C, D, E, R> doMapIterable(
     five: (E) -> R,
 ): Iterable<R> =
     zero()
+        .asSequence()
         .map(one)
         .map(two)
         .map(three)
         .map(four)
         .map(five)
+        .toList()
 
 /**
  * Composes an [Iterable] from multiple functions chained by [Iterable.map]
@@ -915,12 +893,14 @@ fun <A, B, C, D, E, F, R> doMapIterable(
     six: (F) -> R,
 ): Iterable<R> =
     zero()
+        .asSequence()
         .map(one)
         .map(two)
         .map(three)
         .map(four)
         .map(five)
         .map(six)
+        .toList()
 
 /**
  * Composes an [Iterable] from multiple functions chained by [Iterable.map]
@@ -938,6 +918,7 @@ fun <A, B, C, D, E, F, G, R> doMapIterable(
     seven: (G) -> R,
 ): Iterable<R> =
     zero()
+        .asSequence()
         .map(one)
         .map(two)
         .map(three)
@@ -945,6 +926,7 @@ fun <A, B, C, D, E, F, G, R> doMapIterable(
         .map(five)
         .map(six)
         .map(seven)
+        .toList()
 
 /**
  * Composes an [Iterable] from multiple functions chained by [Iterable.map]
@@ -963,6 +945,7 @@ fun <A, B, C, D, E, F, G, H, R> doMapIterable(
     eight: (H) -> R,
 ): Iterable<R> =
     zero()
+        .asSequence()
         .map(one)
         .map(two)
         .map(three)
@@ -971,6 +954,7 @@ fun <A, B, C, D, E, F, G, H, R> doMapIterable(
         .map(six)
         .map(seven)
         .map(eight)
+        .toList()
 
 /**
  * Composes an [Iterable] from multiple functions chained by [Iterable.map]
@@ -990,6 +974,7 @@ fun <A, B, C, D, E, F, G, H, I, R> doMapIterable(
     nine: (I) -> R,
 ): Iterable<R> =
     zero()
+        .asSequence()
         .map(one)
         .map(two)
         .map(three)
@@ -999,3 +984,4 @@ fun <A, B, C, D, E, F, G, H, I, R> doMapIterable(
         .map(seven)
         .map(eight)
         .map(nine)
+        .toList()

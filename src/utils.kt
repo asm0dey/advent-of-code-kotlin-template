@@ -11,16 +11,16 @@ data class Point2D(val x: Int, val y: Int) : Comparable<Point2D> {
     override fun compareTo(other: Point2D): Int = if (x == other.x) y.compareTo(other.y) else x.compareTo(other.x)
     override fun toString(): String = "($x,$y)"
 }
-
+typealias P2 = Point2D
 fun p(x: Int, y: Int) = Point2D(x, y)
-val UP = p(0, -1)
-val DOWN = p(0, 1)
-val LEFT = p(-1, 0)
-val RIGHT = p(1, 0)
-val UP_RIGHT = p(1, -1)
-val UP_LEFT = p(-1, -1)
-val DOWN_RIGHT = p(1, 1)
-val DOWN_LEFT = p(-1, 1)
+val UP = P2(0, -1)
+val DOWN = P2(0, 1)
+val LEFT = P2(-1, 0)
+val RIGHT = P2(1, 0)
+val UP_RIGHT = P2(1, -1)
+val UP_LEFT = P2(-1, -1)
+val DOWN_RIGHT = P2(1, 1)
+val DOWN_LEFT = P2(-1, 1)
 val mainDirections = listOf(UP, DOWN, LEFT, RIGHT)
 val diagonalsDirections = listOf(UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT)
 val directions = listOf(UP, DOWN, LEFT, RIGHT, UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT)
