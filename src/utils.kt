@@ -1,6 +1,7 @@
 @file:Suppress("unused")
 
 import java.util.*
+import kotlin.collections.ArrayDeque
 
 
 data class Point2D(val x: Int, val y: Int) : Comparable<Point2D> {
@@ -8,6 +9,7 @@ data class Point2D(val x: Int, val y: Int) : Comparable<Point2D> {
     operator fun times(other: Int) = Point2D(x * other, y * other)
     operator fun minus(point2D: Point2D): Point2D = Point2D(x - point2D.x, y - point2D.y)
     override fun compareTo(other: Point2D): Int = if (x == other.x) y.compareTo(other.y) else x.compareTo(other.x)
+    override fun toString(): String = "($x,$y)"
 }
 
 fun p(x: Int, y: Int) = Point2D(x, y)
@@ -37,6 +39,8 @@ data class Grid<T>(val data: MutableMap<Point2D, T>, val generator: (Point2D) ->
             .toMutableMap()
     )
 
+    constructor() : this(hashMapOf<Point2D, T>())
+
     operator fun get(x: Int, y: Int) = data[Point2D(x, y)]
     operator fun get(point: Point2D) = data[point]
     operator fun contains(point: Point2D) = point in data
@@ -47,6 +51,36 @@ data class Grid<T>(val data: MutableMap<Point2D, T>, val generator: (Point2D) ->
     operator fun set(first: Point2D, value: T) {
         data[first] = value
     }
+}
+
+fun <T> Grid<T>.bfs(
+    start: Point2D,
+    target: Point2D,
+    allowedDirections: List<Point2D> = mainDirections,
+    isAllowed: (T) -> Boolean = { true },
+): List<Pair<Point2D, T>> {
+    val visited = hashSetOf<Point2D>()
+    val queue: ArrayDeque<Point2D> = ArrayDeque()
+    val result = mutableListOf<Pair<Point2D, T>>()
+
+    queue.add(start)
+    while (queue.isNotEmpty()) {
+        val point = queue.removeFirst()
+        if (point !in visited && point in this) {
+            visited.add(point)
+            val value = this[point] ?: continue
+            if (isAllowed(value)) {
+                result.add(point to value)
+                if (point == target) return result
+                allowedDirections
+                    .map(point::plus)
+                    .filterNot(visited::contains)
+                    .forEach(queue::add)
+            }
+        }
+    }
+
+    return emptyList()
 }
 
 fun <T> Grid<T>.rotateCW(): Grid<T> {

@@ -51,7 +51,7 @@ public class Day18 {
         .limit(byteNumber)
         .map(line -> Arrays.stream(line.split(","))
             .map(Integer::parseInt)
-            .collect(Collectors.toList()))
+            .toList())
         .map(coordinates -> new JPoint2D(coordinates.getFirst(), coordinates.get(1)))
         .collect(Collectors.toMap(point -> point, _ -> '#'));
 
@@ -70,11 +70,11 @@ public class Day18 {
         .filter(line -> !line.isBlank())
         .map(line -> Arrays.stream(line.split(","))
             .map(Integer::parseInt)
-            .collect(Collectors.toList()))
+            .toList())
         .map(coordinates -> new JPoint2D(coordinates.getFirst(), coordinates.get(1)))
         .collect(Collectors.toMap(point -> point, _ -> '#', (v1, _) -> v1, LinkedHashMap::new));
 
-    JGrid<Character> grid = new JGrid<>(List.of(List.of()));
+    var grid = new JGrid<Character>(List.of(List.of()));
 
     fillGrid(exit, grid);
 
