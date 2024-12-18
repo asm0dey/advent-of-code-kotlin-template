@@ -271,9 +271,9 @@ public class Day17 {
   }
 
   public static String part1(List<String> input) {
-    long a = Long.parseLong(findValue(input, "Register A"));
-    long b = Long.parseLong(findValue(input, "Register B"));
-    long c = Long.parseLong(findValue(input, "Register C"));
+    long a = findValue(input, "Register A");
+    long b = findValue(input, "Register B");
+    long c = findValue(input, "Register C");
     long[] registers = {a, b, c, 0};
     List<Integer> program = findAllValues(input);
 
@@ -282,8 +282,8 @@ public class Day17 {
   }
 
   public static long part2(List<String> input) {
-    var b = Long.parseLong(findValue(input, "Register B"));
-    var c = Long.parseLong(findValue(input, "Register C"));
+    var b = findValue(input, "Register B");
+    var c = findValue(input, "Register C");
 
     var program = findAllValues(input);
 
@@ -311,8 +311,8 @@ public class Day17 {
     }
   }
 
-  private static String findValue(List<String> input, String startsWith) {
-    return input.stream().filter(s -> s.startsWith(startsWith)).findFirst().map(s -> s.replaceAll("\\D+", "")).orElseThrow();
+  private static Long findValue(List<String> input, String startsWith) {
+    return input.stream().filter(s -> s.startsWith(startsWith)).findFirst().map(s -> s.replaceAll("\\D+", "")).map(Long::parseLong).orElseThrow();
   }
 
   private static List<Integer> findAllValues(List<String> input) {
