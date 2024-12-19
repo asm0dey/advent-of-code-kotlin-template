@@ -1,6 +1,10 @@
 plugins {
     kotlin("jvm") version "2.1.0"
     java
+    application
+}
+application{
+    mainClass = System.getProperty("exec.mainClass") ?: "Day1Kt"
 }
 
 sourceSets {

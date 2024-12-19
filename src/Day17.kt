@@ -74,8 +74,19 @@ sealed interface OperandD17 {
 
 sealed interface OpcodeD17 {
     companion object {
-        private val map = mapOf(0 to Adv, 1 to Bxl, 2 to Bst, 3 to Jnz, 4 to Bxc, 5 to Out, 6 to Bdv, 7 to Cdv)
-        private val cache = Array(8) { map[it]!! }
+        private val cache = Array(8) {
+            when (it) {
+                0 -> Adv
+                1 -> Bxl
+                2 -> Bst
+                3 -> Jnz
+                4 -> Bxc
+                5 -> Out
+                6 -> Bdv
+                7 -> Cdv
+                else -> error("Unsupported opcode $it")
+            }
+        }
         val Int.opcode get() = cache[this]
     }
 
@@ -86,7 +97,7 @@ sealed interface OpcodeD17 {
         override fun invoke(registers: LongArray, operand: Int): Long {
             val numerator = registers[0]
             val denominator = 2.0.pow(operand.combo(registers).toInt()).toLong()
-            registers[0] = numerator/denominator
+            registers[0] = numerator / denominator
             registers[3] += 2L
             return -1
         }
@@ -202,23 +213,25 @@ fun main() {
         val c = "\\d+".toRegex().find(input.first { it.startsWith("Register C") })!!.value.toInt()
         val program =
             "\\d+".toRegex().findAll(input.first { it.startsWith("Program") }).map { it.value.toInt() }.toList()
-//        println(program.chunked(2).joinToString("\n") { (a, b) -> a.opcode.print(b) })
         var initLength = 1
         var a = 0L
-//        println("Target program: ${program.joinToString(",")}")
         while (true) {
             val registers = longArrayOf(a, b.toLong(), c.toLong(), 0)
             val result = program.execute(registers, initLength).map { it.toInt() }
-            if (result != program.takeLast(initLength)) a++
-            else {
-//                println("With A=$a we get the program ${result.joinToString(",")}")
-                if (result.size == program.size) return a
+            if (result != program.takeLast(initLength)) {
+                a++
+            } else {
+                if (result.size == program.size) {
+                    println("Debug: Match found! Returning 'a' = $a")
+                    return a
+                }
+                // @formatter:off
+                println("Debug: partial match ${result.joinToString(",").padStart(program.size * 2 - 3, ' ')} found with A=$a")
+                // @formatter:on
                 initLength++
                 a = a shl 3
-//                println("Next A to try $a")
             }
         }
-
     }
 
     val testInput = readInput("17t")

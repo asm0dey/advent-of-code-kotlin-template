@@ -12,6 +12,7 @@ data class Point2D(val x: Int, val y: Int) : Comparable<Point2D> {
     override fun toString(): String = "($x,$y)"
 }
 typealias P2 = Point2D
+
 fun p(x: Int, y: Int) = Point2D(x, y)
 val UP = P2(0, -1)
 val DOWN = P2(0, 1)
@@ -184,7 +185,6 @@ value class StringTemplate(private val template: String) {
 }
 
 fun String.convertToType(type: String): Any? {
-    // Handle nullable types by removing the '?' suffix
     val isNullable = type.endsWith("?")
     val actualType = if (isNullable) type.removeSuffix("?") else type
 
@@ -199,29 +199,6 @@ fun String.convertToType(type: String): Any? {
     } catch (e: Exception) {
         if (isNullable) null else throw e // Return null for nullable types if conversion fails, else propagate the exception
     }
-}
-
-// Example usage
-fun main() {
-    val input = """
-        Button A: X+94.5, Y+34
-        Button B: X+22, Y+67
-        Prize: X=Reward, Y=ContactUs
-        
-        Button A: X+100, Y+200
-        Button B: X+23.7, Y+45
-        Prize: X=12345.67, Y=SomePrizeHere
-    """.trimIndent()
-
-    val template = """
-        Button A: X+{ax|double}, Y+{ay|long}
-        Button B: X+{bx|double}, Y+{by|long}
-        Prize: X={rx|string}, Y={ry|string}
-    """.trimIndent().toTemplate()
-
-    val result = template.parse(input)
-
-    println(result)
 }
 
 private fun String.toTemplate() = StringTemplate(this)
