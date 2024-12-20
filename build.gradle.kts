@@ -6,7 +6,9 @@ plugins {
 application{
     mainClass = System.getProperty("exec.mainClass") ?: "Day1Kt"
 }
-
+dependencies {
+    implementation("org.jgrapht:jgrapht-core:1.5.2")
+}
 sourceSets {
     main {
         kotlin.srcDir("src")

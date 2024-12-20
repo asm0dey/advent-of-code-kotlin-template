@@ -2,6 +2,7 @@
 
 import java.util.*
 import kotlin.collections.ArrayDeque
+import kotlin.math.absoluteValue
 
 
 data class Point2D(val x: Int, val y: Int) : Comparable<Point2D> {
@@ -10,6 +11,7 @@ data class Point2D(val x: Int, val y: Int) : Comparable<Point2D> {
     operator fun minus(point2D: Point2D): Point2D = Point2D(x - point2D.x, y - point2D.y)
     override fun compareTo(other: Point2D): Int = if (x == other.x) y.compareTo(other.y) else x.compareTo(other.x)
     override fun toString(): String = "($x,$y)"
+    fun manhattanDistance(other: Point2D): Int = (x - other.x).absoluteValue + (y - other.y).absoluteValue
 }
 typealias P2 = Point2D
 
