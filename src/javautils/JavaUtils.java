@@ -25,7 +25,10 @@ public class JavaUtils {
     public JPoint2D minus(JPoint2D other) {
       return new JPoint2D(x - other.x, y - other.y);
     }
-    
+
+    public int manhattanDistance(JPoint2D other) {
+      return Math.abs(x - other.x) + Math.abs(y - other.y);
+    }
   }
 
   public record JGrid<T>(Map<JPoint2D, T> data) implements Iterable<JPoint2D> {

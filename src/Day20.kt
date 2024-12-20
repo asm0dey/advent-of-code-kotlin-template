@@ -33,11 +33,12 @@ fun main() {
         graph.removeAllVertices(grid.data.filter { it.value == '#' }.keys)
         val start = grid.data.asSequence().first { it.value == 'S' }.key
         val end = grid.data.asSequence().first { it.value == 'E' }.key
+        val bfs = BFSShortestPath(graph)
         val allPaths = buildMap {
-            for (tStart in listOf(start, end)) {
-                val paths = BFSShortestPath(graph).getPaths(tStart)
-                for (tEnd in graph.vertexSet()) {
-                    paths.getPath(tEnd)?.let { put(tStart to tEnd, it.weight.toInt()) }
+            for (source in listOf(start, end)) {
+                val paths = bfs.getPaths(source)
+                for (sink in graph.vertexSet()) {
+                    put(source to sink, paths.getWeight(sink).toInt())
                 }
             }
         }
