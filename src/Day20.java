@@ -52,10 +52,10 @@ public class Day20 {
         .generateGraph(graph);
 
     // Remove blocked vertices
-    grid.data().entrySet().stream()
+    graph.removeAllVertices(grid.data().entrySet().stream()
         .filter(entry -> entry.getValue() == '#')
         .map(Map.Entry::getKey)
-        .forEach(graph::removeVertex);
+        .toList());
 
     // Find "start" and "end" vertices
     JPoint2D start = grid.data().entrySet().stream()
@@ -81,8 +81,8 @@ public class Day20 {
     results.put(initLength, 1);
 
     List<JPoint2D> vertices = graph.vertexSet().stream()
-        .sorted(Comparator.comparingInt(v -> allPaths.getOrDefault(new Pair<>(start, v), Integer.MAX_VALUE)))
-        .collect(Collectors.toList());
+        .sorted(Comparator.comparingInt(v -> allPaths.get(new Pair<>(start, v))))
+        .toList();
 
     for (int i = 0; i < vertices.size(); i++) {
       for (int j = i + 1; j < vertices.size(); j++) {
