@@ -2,10 +2,6 @@ import org.jgrapht.Graph
 import org.jgrapht.alg.clique.BronKerboschCliqueFinder
 import org.jgrapht.graph.DefaultEdge
 import org.jgrapht.graph.builder.GraphTypeBuilder
-import org.jgrapht.nio.graph6.Graph6Sparse6Exporter
-import org.jgrapht.nio.graphml.GraphMLExporter
-import org.jgrapht.nio.json.JSONExporter
-import java.io.File
 
 fun main() {
     fun buildGraph(input: List<String>): Graph<String, DefaultEdge> {
@@ -52,5 +48,4 @@ fun main() {
     part1(input).println()
     part2(testInput).println()
     part2(input).println()
-    JSONExporter<String,DefaultEdge>({it}).exportGraph(buildGraph(input), File("/tmp/graph.graphml"))
 }
